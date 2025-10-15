@@ -145,9 +145,17 @@ class Docente:
             )
         print(f"Docente '{self.nombre}' guardado con éxito.")
 
-
-
-
+    @staticmethod
+    def listar():
+        with Docente._conn() as conn:
+            cur = conn.execute("SELECT * FROM docentes")
+            filas = cur.fetchall()
+            if not filas:
+                print("No hay docentes registrados.")
+                return
+            print("\n--- LISTADO DE DOCENTES ---")
+            for f in filas:
+                print(f"ID: {f['id_docente']} | Nombre: {f['nombre']} | Especialidad: {f['especialidad']}")
 
 
 
@@ -160,6 +168,10 @@ def menu():
         print("3. Modificar estudiante")
         print("4. Eliminar estudiante")
         print("5. Promedio general")
+        print("6. Ingresar curso")
+        print("7. Listar cursos")
+        print("8. Ingresar docente")
+        print("9. Listar docente")
         print("0. Salir")
         opcion = input("Seleccione una opción: ")
 
@@ -177,6 +189,20 @@ def menu():
             Estudiante.eliminar()
         elif opcion == "5":
             Estudiante.promedio_general()
+        elif opcion == "6":
+            nombre = input("Nombre del curso: ")
+            creditos = int(input("Créditos: "))
+            c = Curso(nombre, creditos)
+            c.guardar()
+        elif opcion == "7":
+            Curso.listar()
+        elif opcion == "8":
+            nombre = input("Nombre del docente: ")
+            especialidad = input("Especialidad: ")
+            d = Docente(nombre, especialidad)
+            d.guardar()
+        elif opcion == "9":
+            Docente.listar()
         elif opcion == "0":
             print("Saliendo del programa...")
             break
