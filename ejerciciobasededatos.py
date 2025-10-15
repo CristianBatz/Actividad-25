@@ -128,7 +128,7 @@ class Curso:
                 print("No se encontró el curso.")
                 return
             print("\n--- Informacion del curso ---")
-            print(f"ID: {fila['id_docente']} | Nombre: {fila['nombre']} | Especialidad: {fila['especialidad']}")
+            print(f"ID: {fila['id_curso']} | Nombre: {fila['nombre']} | Punteo: {fila['punteo']}")
 
 class Docente:
     def __init__(self, nombre, especialidad):
@@ -168,8 +168,6 @@ class Docente:
             print("\n--- LISTADO DE DOCENTES ---")
             for f in filas:
                 print(f"ID: {f['id_docente']} | Nombre: {f['nombre']} | Especialidad: {f['especialidad']}")
-
-
 
 # --- MENÚ PRINCIPAL ---
 def menu():
