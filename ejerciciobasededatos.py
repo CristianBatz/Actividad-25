@@ -92,7 +92,7 @@ class Curso:
             CREATE TABLE IF NOT EXISTS cursos (
                 id_curso INTEGER PRIMARY KEY AUTOINCREMENT,
                 nombre TEXT NOT NULL,
-                punteo INTEGER NOT NULL,
+                punteo INTEGER NOT NULL
             );
         """)
         conn.commit()
@@ -101,7 +101,7 @@ class Curso:
     def guardar(self):
         with self._conn() as conn:
             conn.execute(
-                "INSERT INTO cursos (nombre, punteo) VALUES (?, ?, ?)",
+                "INSERT INTO cursos (nombre, punteo) VALUES (?, ?)",
                 (self.nombre, self.punteo)
             )
         print(f"Curso '{self.nombre}' guardado con éxito.")
@@ -131,7 +131,7 @@ class Docente:
             CREATE TABLE IF NOT EXISTS docentes (
                 id_docente INTEGER PRIMARY KEY AUTOINCREMENT,
                 nombre TEXT NOT NULL,
-                especialidad TEXT NOT NULL,
+                especialidad TEXT NOT NULL
             );
         """)
         conn.commit()
@@ -140,7 +140,7 @@ class Docente:
     def guardar(self):
         with self._conn() as conn:
             conn.execute(
-                "INSERT INTO docentes (nombre, especialidad) VALUES (?, ?, ?)",
+                "INSERT INTO docentes (nombre, especialidad) VALUES (?, ?)",
                 (self.nombre, self.especialidad)
             )
         print(f"Docente '{self.nombre}' guardado con éxito.")
@@ -191,8 +191,8 @@ def menu():
             Estudiante.promedio_general()
         elif opcion == "6":
             nombre = input("Nombre del curso: ")
-            creditos = int(input("Créditos: "))
-            c = Curso(nombre, creditos)
+            punteo = int(input("punteo: "))
+            c = Curso(nombre, punteo)
             c.guardar()
         elif opcion == "7":
             Curso.listar()
