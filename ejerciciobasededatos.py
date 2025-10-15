@@ -80,9 +80,9 @@ class Estudiante:
                 print("No hay datos para calcular el promedio.")
 
 class Curso:
-    def __init__(self, nombre, punteo):
+    def __init__(self, nombre, credito):
         self.nombre = nombre
-        self.punteo = punteo
+        self.credito = credito
 
     @staticmethod
     def _conn():
@@ -92,7 +92,7 @@ class Curso:
             CREATE TABLE IF NOT EXISTS cursos (
                 id_curso INTEGER PRIMARY KEY AUTOINCREMENT,
                 nombre TEXT NOT NULL,
-                punteo INTEGER NOT NULL
+                credito INTEGER NOT NULL
             );
         """)
         conn.commit()
@@ -101,8 +101,8 @@ class Curso:
     def guardar(self):
         with self._conn() as conn:
             conn.execute(
-                "INSERT INTO cursos (nombre, punteo) VALUES (?, ?)",
-                (self.nombre, self.punteo)
+                "INSERT INTO cursos (nombre, credito) VALUES (?, ?)",
+                (self.nombre, self.credito)
             )
         print(f"Curso '{self.nombre}' guardado con éxito.")
 
@@ -116,7 +116,22 @@ class Curso:
                 return
             print("\n--- LISTADO DE CURSOS ---")
             for f in filas:
-                print(f"ID: {f['id_curso']} | Nombre: {f['nombre']} | Punteo: {f['punteo']}")
+                print(f"ID: {f['id_curso']} | Nombre: {f['nombre']} | Creditos: {f['credito']}")
+
+    @staticmethod
+    def modificar():
+        ide = int(input("Ingrese ID del curso a modificar: "))
+        with Curso._conn() as conn:
+            cur = conn.execute("SELECT * FROM cursos WHERE id_curso = ?", (ide,))
+            fila = cur.fetchone()
+            if not fila:
+                print("No se encontró el curso.")
+                return
+            nombre = input(f"Nuevo nombre [{fila['nombre']}]: ") or fila['nombre']
+            credito = input(f"Nuevo credito [{fila['credito']}]: ") or fila['credito']
+            conn.execute("UPDATE cursos SET nombre=?, credito=? WHERE id_curso=?",
+                         (nombre, credito, ide))
+        print("curso actualizado con éxito.")
 
     @staticmethod
     def eliminar():
@@ -126,7 +141,7 @@ class Curso:
             if cur.rowcount == 0:
                 print("No se encontró el curso.")
             else:
-                print("Estudiante eliminado con éxito.")
+                print("Curso eliminado con éxito.")
 
     @staticmethod
     def buscar():
@@ -138,7 +153,7 @@ class Curso:
                 print("No se encontró el curso.")
                 return
             print("\n--- Informacion del curso ---")
-            print(f"ID: {fila['id_curso']} | Nombre: {fila['nombre']} | Punteo: {fila['punteo']}")
+            print(f"ID: {fila['id_curso']} | Nombre: {fila['nombre']} | Creditos: {fila['credito']}")
 
 class Docente:
     def __init__(self, nombre, especialidad):
@@ -180,14 +195,29 @@ class Docente:
                 print(f"ID: {f['id_docente']} | Nombre: {f['nombre']} | Especialidad: {f['especialidad']}")
 
     @staticmethod
+    def modificar():
+        ide = int(input("Ingrese ID del docente a modificar: "))
+        with Docente._conn() as conn:
+            cur = conn.execute("SELECT * FROM docentes WHERE id_docente = ?", (ide,))
+            fila = cur.fetchone()
+            if not fila:
+                print("No se encontró el docente.")
+                return
+            nombre = input(f"Nuevo nombre [{fila['nombre']}]: ") or fila['nombre']
+            especialidad = input(f"Nueva especialidad [{fila['Especialidad']}]: ") or fila['Especialidad']
+            conn.execute("UPDATE docentes SET nombre=?, especialidad=? WHERE id_docente=?",
+                         (nombre, especialidad, ide))
+        print("docente actualizado con éxito.")
+
+    @staticmethod
     def eliminar():
         ide = int(input("Ingrese ID del docente a eliminar: "))
         with Docente._conn() as conn:
             cur = conn.execute("DELETE FROM docentes WHERE id_docente = ?", (ide,))
             if cur.rowcount == 0:
-                print("No se encontró el curso.")
+                print("No se encontró el docente.")
             else:
-                print("Estudiante eliminado con éxito.")
+                print("Docente eliminado con éxito.")
 
     @staticmethod
     def buscar():
@@ -212,8 +242,10 @@ def menu():
         print("5. Promedio general")
         print("6. Ingresar curso")
         print("7. Listar cursos")
-        print("8. Ingresar docente")
-        print("9. Listar docente")
+        print("8. Eliminar curso")
+        print("9. Ingresar docente")
+        print("10. Listar docente")
+        print("11. Eliminar docente")
         print("0. Salir")
         opcion = input("Seleccione una opción: ")
 
@@ -233,18 +265,22 @@ def menu():
             Estudiante.promedio_general()
         elif opcion == "6":
             nombre = input("Nombre del curso: ")
-            punteo = int(input("punteo: "))
-            c = Curso(nombre, punteo)
+            credito = int(input("creditos: "))
+            c = Curso(nombre, credito)
             c.guardar()
         elif opcion == "7":
             Curso.listar()
         elif opcion == "8":
+            Curso.eliminar()
+        elif opcion == "9":
             nombre = input("Nombre del docente: ")
             especialidad = input("Especialidad: ")
             d = Docente(nombre, especialidad)
             d.guardar()
-        elif opcion == "9":
+        elif opcion == "10":
             Docente.listar()
+        elif opcion == "11":
+            Docente.eliminar()
         elif opcion == "0":
             print("Saliendo del programa...")
             break
