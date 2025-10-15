@@ -79,6 +79,35 @@ class Estudiante:
             else:
                 print("No hay datos para calcular el promedio.")
 
+class Curso:
+    def __init__(self, nombre, punteo):
+        self.nombre = nombre
+        self.punteo = punteo
+
+    @staticmethod
+    def _conn():
+        conn = sqlite3.connect(DB_NAME)
+        conn.row_factory = sqlite3.Row
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS cursos (
+                id_curso INTEGER PRIMARY KEY AUTOINCREMENT,
+                nombre TEXT NOT NULL,
+                punteo INTEGER NOT NULL,
+            );
+        """)
+        conn.commit()
+        return conn
+
+    def guardar(self):
+        with self._conn() as conn:
+            conn.execute(
+                "INSERT INTO curso (nombre, punteo) VALUES (?, ?, ?)",
+                (self.nombre, self.punteo)
+            )
+        print(f"Curso '{self.nombre}' guardado con éxito.")
+
+
+
 
 # --- MENÚ PRINCIPAL ---
 def menu():
