@@ -195,21 +195,6 @@ class Docente:
                 print(f"ID: {f['id_docente']} | Nombre: {f['nombre']} | Especialidad: {f['especialidad']}")
 
     @staticmethod
-    def modificar():
-        ide = int(input("Ingrese ID del docente a modificar: "))
-        with Docente._conn() as conn:
-            cur = conn.execute("SELECT * FROM docentes WHERE id_docente = ?", (ide,))
-            fila = cur.fetchone()
-            if not fila:
-                print("No se encontró el docente.")
-                return
-            nombre = input(f"Nuevo nombre [{fila['nombre']}]: ") or fila['nombre']
-            especialidad = input(f"Nueva especialidad [{fila['Especialidad']}]: ") or fila['Especialidad']
-            conn.execute("UPDATE docentes SET nombre=?, especialidad=? WHERE id_docente=?",
-                         (nombre, especialidad, ide))
-        print("docente actualizado con éxito.")
-
-    @staticmethod
     def eliminar():
         ide = int(input("Ingrese ID del docente a eliminar: "))
         with Docente._conn() as conn:
@@ -242,10 +227,11 @@ def menu():
         print("5. Promedio general")
         print("6. Ingresar curso")
         print("7. Listar cursos")
-        print("8. Eliminar curso")
-        print("9. Ingresar docente")
-        print("10. Listar docente")
-        print("11. Eliminar docente")
+        print("8. Modificar curso")
+        print("9. Eliminar curso")
+        print("10. Ingresar docente")
+        print("11. Listar docente")
+        print("12. Eliminar docente")
         print("0. Salir")
         opcion = input("Seleccione una opción: ")
 
@@ -271,22 +257,23 @@ def menu():
         elif opcion == "7":
             Curso.listar()
         elif opcion == "8":
-            Curso.eliminar()
+            Curso.modificar()
         elif opcion == "9":
+            Curso.eliminar()
+        elif opcion == "10":
             nombre = input("Nombre del docente: ")
             especialidad = input("Especialidad: ")
             d = Docente(nombre, especialidad)
             d.guardar()
-        elif opcion == "10":
-            Docente.listar()
         elif opcion == "11":
+            Docente.listar()
+        elif opcion == "12":
             Docente.eliminar()
         elif opcion == "0":
             print("Saliendo del programa...")
             break
         else:
             print("Opción inválida. Intente nuevamente.")
-
 
 if __name__ == "__main__":
     menu()
