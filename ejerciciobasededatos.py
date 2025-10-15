@@ -118,6 +118,18 @@ class Curso:
             for f in filas:
                 print(f"ID: {f['id_curso']} | Nombre: {f['nombre']} | Créditos: {f['creditos']}")
 
+    @staticmethod
+    def buscar():
+        ide = input("Ingrese ID del curso a buscar: ")
+        with Curso._conn() as conn:
+            cur = conn.execute("SELECT * FROM cursos WHERE id_curso = ?", (ide,))
+            fila = cur.fetchone()
+            if not fila:
+                print("No se encontró el curso.")
+                return
+            print("\n--- Informacion del curso ---")
+            print(f"ID: {fila['id_docente']} | Nombre: {fila['nombre']} | Especialidad: {fila['especialidad']}")
+
 class Docente:
     def __init__(self, nombre, especialidad):
         self.nombre = nombre
