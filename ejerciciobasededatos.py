@@ -101,10 +101,52 @@ class Curso:
     def guardar(self):
         with self._conn() as conn:
             conn.execute(
-                "INSERT INTO curso (nombre, punteo) VALUES (?, ?, ?)",
+                "INSERT INTO cursos (nombre, punteo) VALUES (?, ?, ?)",
                 (self.nombre, self.punteo)
             )
         print(f"Curso '{self.nombre}' guardado con éxito.")
+
+    @staticmethod
+    def listar():
+        with Curso._conn() as conn:
+            cur = conn.execute("SELECT * FROM cursos")
+            filas = cur.fetchall()
+            if not filas:
+                print("No hay cursos registrados.")
+                return
+            print("\n--- LISTADO DE CURSOS ---")
+            for f in filas:
+                print(f"ID: {f['id_curso']} | Nombre: {f['nombre']} | Créditos: {f['creditos']}")
+
+class Docente:
+    def __init__(self, nombre, especialidad):
+        self.nombre = nombre
+        self.especialidad = especialidad
+
+    @staticmethod
+    def _conn():
+        conn = sqlite3.connect(DB_NAME)
+        conn.row_factory = sqlite3.Row
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS docentes (
+                id_docente INTEGER PRIMARY KEY AUTOINCREMENT,
+                nombre TEXT NOT NULL,
+                especialidad TEXT NOT NULL,
+            );
+        """)
+        conn.commit()
+        return conn
+
+    def guardar(self):
+        with self._conn() as conn:
+            conn.execute(
+                "INSERT INTO docentes (nombre, especialidad) VALUES (?, ?, ?)",
+                (self.nombre, self.especialidad)
+            )
+        print(f"Docente '{self.nombre}' guardado con éxito.")
+
+
+
 
 
 
