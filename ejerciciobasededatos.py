@@ -45,7 +45,7 @@ class Estudiante:
 
     @staticmethod
     def modificar():
-        ide = input("Ingrese ID del estudiante a modificar: ")
+        ide = int(input("Ingrese ID del estudiante a modificar: "))
         with Estudiante._conn() as conn:
             cur = conn.execute("SELECT * FROM estudiantes WHERE id_estudiante = ?", (ide,))
             fila = cur.fetchone()
@@ -54,7 +54,7 @@ class Estudiante:
                 return
             nombre = input(f"Nuevo nombre [{fila['nombre']}]: ") or fila['nombre']
             carrera = input(f"Nueva carrera [{fila['carrera']}]: ") or fila['carrera']
-            promedio = input(f"Nuevo promedio [{fila['promedio']}]: ") or fila['promedio']
+            promedio = float(input(f"Nuevo promedio [{fila['promedio']}]: ") or fila['promedio'])
             conn.execute("UPDATE estudiantes SET nombre=?, carrera=?, promedio=? WHERE id_estudiante=?",
                          (nombre, carrera, promedio, ide))
         print("Estudiante actualizado con éxito.")
@@ -116,11 +116,21 @@ class Curso:
                 return
             print("\n--- LISTADO DE CURSOS ---")
             for f in filas:
-                print(f"ID: {f['id_curso']} | Nombre: {f['nombre']} | Créditos: {f['creditos']}")
+                print(f"ID: {f['id_curso']} | Nombre: {f['nombre']} | Punteo: {f['punteo']}")
+
+    @staticmethod
+    def eliminar():
+        ide = input("Ingrese ID del curso a eliminar: ")
+        with Curso._conn() as conn:
+            cur = conn.execute("DELETE FROM cursos WHERE id_curso = ?", (ide,))
+            if cur.rowcount == 0:
+                print("No se encontró el curso.")
+            else:
+                print("Estudiante eliminado con éxito.")
 
     @staticmethod
     def buscar():
-        ide = input("Ingrese ID del curso a buscar: ")
+        ide = int(input("Ingrese ID del curso a buscar: "))
         with Curso._conn() as conn:
             cur = conn.execute("SELECT * FROM cursos WHERE id_curso = ?", (ide,))
             fila = cur.fetchone()
@@ -168,6 +178,28 @@ class Docente:
             print("\n--- LISTADO DE DOCENTES ---")
             for f in filas:
                 print(f"ID: {f['id_docente']} | Nombre: {f['nombre']} | Especialidad: {f['especialidad']}")
+
+    @staticmethod
+    def eliminar():
+        ide = int(input("Ingrese ID del docente a eliminar: "))
+        with Docente._conn() as conn:
+            cur = conn.execute("DELETE FROM docentes WHERE id_docente = ?", (ide,))
+            if cur.rowcount == 0:
+                print("No se encontró el curso.")
+            else:
+                print("Estudiante eliminado con éxito.")
+
+    @staticmethod
+    def buscar():
+        ide = input("Ingrese ID del docente a buscar: ")
+        with Docente._conn() as conn:
+            cur = conn.execute("SELECT * FROM docentes WHERE id_docente = ?", (ide,))
+            fila = cur.fetchone()
+            if not fila:
+                print("No se encontró el docente.")
+                return
+            print("\n--- Informacion del docente ---")
+            print(f"ID: {fila['id_docente']} | Nombre: {fila['nombre']} | Especialidad: {fila['especialidad']}")
 
 # --- MENÚ PRINCIPAL ---
 def menu():
