@@ -228,10 +228,12 @@ def menu():
         print("6. Ingresar curso")
         print("7. Listar cursos")
         print("8. Modificar curso")
-        print("9. Eliminar curso")
-        print("10. Ingresar docente")
-        print("11. Listar docente")
-        print("12. Eliminar docente")
+        print("9. Buscar curso")
+        print("10. Eliminar curso")
+        print("11. Ingresar docente")
+        print("12. Listar docente")
+        print("13. Buscar docente")
+        print("14. Eliminar docente")
         print("0. Salir")
         opcion = input("Seleccione una opción: ")
 
@@ -259,15 +261,19 @@ def menu():
         elif opcion == "8":
             Curso.modificar()
         elif opcion == "9":
-            Curso.eliminar()
+            Curso.buscar()
         elif opcion == "10":
+            Curso.eliminar()
+        elif opcion == "11":
             nombre = input("Nombre del docente: ")
             especialidad = input("Especialidad: ")
             d = Docente(nombre, especialidad)
             d.guardar()
-        elif opcion == "11":
-            Docente.listar()
         elif opcion == "12":
+            Docente.listar()
+        elif opcion == "13":
+            Docente.buscar()
+        elif opcion == "14":
             Docente.eliminar()
         elif opcion == "0":
             print("Saliendo del programa...")
